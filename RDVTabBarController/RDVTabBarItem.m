@@ -247,6 +247,15 @@
     CGContextRestoreGState(context);
 }
 
+- (void)setHidden:(BOOL)hidden {
+    [super setHidden:hidden];
+    
+    if (self.superview) {
+        [self.superview setNeedsLayout];
+        [self.superview layoutIfNeeded];
+    }
+}
+
 #pragma mark - Image configuration
 
 - (UIImage *)finishedSelectedImage {

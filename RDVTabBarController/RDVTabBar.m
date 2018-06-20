@@ -64,17 +64,24 @@
     CGSize frameSize = self.frame.size;
     CGFloat minimumContentHeight = [self minimumContentHeight];
     
+    NSMutableArray *showItems = [NSMutableArray array];
+    for (RDVTabBarItem *item in [self items]) {
+        if (!item.hidden) {
+            [showItems addObject:item];
+        }
+    }
+    
     [[self backgroundView] setFrame:CGRectMake(0, frameSize.height - minimumContentHeight,
                                             frameSize.width, frameSize.height)];
     
     [self setItemWidth:roundf((frameSize.width - [self contentEdgeInsets].left -
-                               [self contentEdgeInsets].right) / [[self items] count])];
+                               [self contentEdgeInsets].right) / [showItems count])];
     
     NSInteger index = 0;
     
     // Layout items
     
-    for (RDVTabBarItem *item in [self items]) {
+    for (RDVTabBarItem *item in showItems) {
         CGFloat itemHeight = [item itemHeight];
         
         if (!itemHeight) {
@@ -120,7 +127,7 @@
     
     for (RDVTabBarItem *item in [self items]) {
         CGFloat itemHeight = [item itemHeight];
-        if (itemHeight && (itemHeight < minimumTabBarContentHeight)) {
+        if (!item.hidden && itemHeight && (itemHeight < minimumTabBarContentHeight)) {
             minimumTabBarContentHeight = itemHeight;
         }
     }
